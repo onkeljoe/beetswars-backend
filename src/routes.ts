@@ -2,7 +2,7 @@ import { Express, Request, Response, NextFunction } from "express";
 
 function routes(app: Express) {
   app.get("/", (req: Request, res: Response) => {
-    return res.send("Hello World");
+    return res.send("Nothing to see here");
   });
 
   app.get("/health/", (req: Request, res: Response) => {

@@ -2,17 +2,15 @@ import express from "express";
 import helmet from "helmet";
 import routes from "./routes";
 import logger from "./utils/logger";
+import { config } from "./utils/config";
 
-const port = 3030;
-const hostname = "0.0.0.0";
-// const logger = pino();
 const app = express();
 
-app.use(helmet());
-app.use(express.json());
+app.use(helmet()); // add security layer
+app.use(express.json()); // allow JSON in POST
 
 routes(app);
 
-app.listen(port, hostname, () => {
-  logger.info(`App listening at http://${hostname}:${port}`);
+app.listen(config.PORT, config.HOST, () => {
+  logger.info(`App listening at http://${config.HOST}:${config.PORT}`);
 });

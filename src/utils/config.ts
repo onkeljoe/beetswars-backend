@@ -1,17 +1,12 @@
-// get typed config object from dotenv or default-values
+import dotenv from "dotenv";
+dotenv.config();
 
-import envSchema from "env-schema";
-import { Type, Static } from "@sinclair/typebox";
+const PORT = process.env.PORT || 4000;
+const HOST = process.env.HOST || "0.0.0.0";
+const DATABASE_URL = process.env.DATABASE_URL || "";
 
-const schema = Type.Object({
-  PORT: Type.Number({ default: 4000 }),
-  HOST: Type.String({ default: "0.0.0.0" }),
-  DATABASE_URL: Type.String(),
-});
-
-type ENV = Static<typeof schema>;
-
-export const config = envSchema<ENV>({
-  schema,
-  dotenv: true,
-});
+export const config = {
+  port: +PORT,
+  host: HOST,
+  databaseUrl: DATABASE_URL,
+};

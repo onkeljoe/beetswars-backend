@@ -12,8 +12,8 @@ app.use(express.json()); // allow JSON in POST
 
 routes(app);
 
-app.listen(config.PORT, config.HOST, () => {
-  logger.info(`App listening at http://${config.HOST}:${config.PORT}`);
+app.listen(config.port, config.host, () => {
+  logger.info(`App listening at http://${config.host}:${config.port}`);
 });
 
 (async () => await connectToDb())();

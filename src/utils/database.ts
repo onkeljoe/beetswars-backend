@@ -1,17 +1,22 @@
-import mongoose from "mongoose";
 import { config } from "./config";
 import logger from "./logger";
 
+import { MongoClient } from "mongodb";
+
+const client = new MongoClient(config.databaseUrl);
+
 export async function connectToDb() {
   try {
-    await mongoose.connect(config.databaseUrl);
-    logger.info("Connected to database");
+    await client.connect();
+    logger.info("Connected to Database");
   } catch (error) {
     logger.error(error);
-    process.exit(1);
+    process.exitCode = 1;
   }
+  return client.db(config.dbName);
 }
 
 export function disconnectFromDb() {
-  return mongoose.connection.close();
+  logger.info("Disconnect from Database");
+  return client.close();
 }

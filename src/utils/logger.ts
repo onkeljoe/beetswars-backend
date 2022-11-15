@@ -1,5 +1,4 @@
 import pino from "pino";
-import { pid } from "process";
 
 const logger = pino({
   transport: {

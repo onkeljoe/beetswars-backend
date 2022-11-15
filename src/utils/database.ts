@@ -4,6 +4,7 @@ import logger from "./logger";
 import { MongoClient } from "mongodb";
 
 const client = new MongoClient(config.databaseUrl);
+export const db = client.db(config.dbName);
 
 export async function connectToDb() {
   try {
@@ -13,7 +14,6 @@ export async function connectToDb() {
     logger.error(error);
     process.exitCode = 1;
   }
-  return client.db(config.dbName);
 }
 
 export function disconnectFromDb() {

@@ -13,7 +13,7 @@
   "name": "beetswars-backend",
   "version": "1.0.0",
   "description": "Backend and API for beetswars",
-  "main": "src/index.js",
+  "main": "src/index.ts",
   "repository": "https://github.com/onkeljoe/beetswars-backend.git",
   "author": "Onkeljoe <dev@onkeljoe.de>",
   "license": "MIT",
@@ -33,7 +33,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "nodemon src/index.ts",
-    "start": "ts-node src/index.ts",
-    "prod": "node dist/index.js"
+    "run-ts": "ts-node src/index.ts",
+    "start": "node dist/index.js"
   }
 }

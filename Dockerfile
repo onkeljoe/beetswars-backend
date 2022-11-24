@@ -1,9 +1,9 @@
-FROM node:16
-
+FROM node:16-alpine
 WORKDIR /usr/app
 
-COPY package*.json ./
-COPY yarn.lock ./
+# Install app dependencies
+COPY package*.json .
+COPY yarn.lock .
 RUN yarn install
 
 COPY . .
@@ -11,7 +11,6 @@ COPY . .
 # for Typescript
 RUN yarn build
 # COPY files to dist, if needed
-WORKDIR ./dist
-
-expose 4000
-CMD node index.js
+# COPY .env .
+EXPOSE 4000
+CMD node dist/index.js

@@ -33,7 +33,7 @@
   },
   "scripts": {
     "clear": "rimraf ./dist",
-    "build": "tsc",
+    "build": "yarn install && tsc",
     "dev": "nodemon src/index.ts",
     "start": "node dist/index.js"
   }

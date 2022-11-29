@@ -11,12 +11,12 @@ Backend and API for beetswars
 
 ## Startup
 
-you always may use `npm` instead of `yarn`
-
 - `yarn dev` starts in developer mode with auto-restart on changed files
 - `yarn start` starts the server from typescript files, using ts-node
 - `yarn build` compiles typescript to javascript into the `/dist` folder
 - `yarn prod` runs the server using node.js from the `/dist` folder
+
+you may use `npm` instead of `yarn`, commands will be different, read npm manual.
 
 ## Prepare
 

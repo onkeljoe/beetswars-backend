@@ -1,30 +1,30 @@
-import { ObjectId } from "mongodb";
-import * as z from "zod";
+// import { ObjectId } from "mongodb";
+// import * as z from "zod";
 
-export const ParamsWithId = z.object({
-  id: z
-    .string()
-    .min(1)
-    .refine(
-      (val) => {
-        try {
-          return new ObjectId(val);
-        } catch (error) {
-          return false;
-        }
-      },
-      {
-        message: "Invalid ObjectId",
-      }
-    ),
-});
+// export const ParamsWithId = z.object({
+//   id: z
+//     .string()
+//     .min(1)
+//     .refine(
+//       (val) => {
+//         try {
+//           return new ObjectId(val);
+//         } catch (error) {
+//           return false;
+//         }
+//       },
+//       {
+//         message: "Invalid ObjectId",
+//       }
+//     ),
+// });
 
-export type ParamsWithId = z.infer<typeof ParamsWithId>;
+// export type ParamsWithId = z.infer<typeof ParamsWithId>;
 
-export interface MessageResponse {
-  message: string;
-}
+// export interface MessageResponse {
+//   message: string;
+// }
 
-export interface ErrorResponse extends MessageResponse {
-  stack?: string;
-}
+// export interface ErrorResponse extends MessageResponse {
+//   stack?: string;
+// }

@@ -1,4 +1,4 @@
-import { WithId } from "mongodb";
+// import { WithId } from "mongodb";
 import * as z from "zod";
 
 export const Chartdata = z.object({
@@ -11,4 +11,4 @@ export const Chartdata = z.object({
 });
 
 export type Chartdata = z.infer<typeof Chartdata>;
-export type ChartdataWithId = WithId<Chartdata>;
+// export type ChartdataWithId = WithId<Chartdata>;

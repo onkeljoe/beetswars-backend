@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { ObjectId } from "mongodb";
+// import { ObjectId } from "mongodb";
 
 import { db } from "../../utils/database";
 import { Chartdata } from "./chartdata.model";
@@ -30,16 +30,16 @@ export async function createOne(
   }
 }
 
-export async function findOne(req: Request, res: Response, next: NextFunction) {
-  try {
-    const sid = new ObjectId(req.params.id);
-    const result = await table.findOne({ _id: sid });
-    if (!result) {
-      res.status(404);
-      throw new Error("No Object with given ID found");
-    }
-    res.json(result);
-  } catch (error) {
-    next(error);
-  }
-}
+// export async function findOne(req: Request, res: Response, next: NextFunction) {
+//   try {
+//     const sid = new ObjectId(req.params.id);
+//     const result = await table.findOne({ _id: sid });
+//     if (!result) {
+//       res.status(404);
+//       throw new Error("No Object with given ID found");
+//     }
+//     res.json(result);
+//   } catch (error) {
+//     next(error);
+//   }
+// }

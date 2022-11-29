@@ -2,3 +2,5 @@
 node_modules
 API-doc
 docker_archive
+dist
+*.log

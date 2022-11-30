@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-// import { ObjectId } from "mongodb";
 
 import { db } from "../../utils/database";
 import { Chartdata } from "./chartdata.model";

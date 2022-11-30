@@ -5,7 +5,7 @@ import { db } from "./utils/database";
 
 import helmet from "helmet";
 import cors from "cors";
-// import api from "./api";
+import api from "./api";
 
 const app = express();
 const myDb = db;
@@ -19,7 +19,7 @@ app.get("/", (req: Request, res: Response<string>) => {
   return res.send("Nothing to see here.");
 });
 
-// app.use("/api/v1", api);
+app.use("/api/v1", api);
 
 app.listen(config.port, config.host, () => {
   logger.info(`App listening at http://${config.host}:${config.port}`);

@@ -7,23 +7,26 @@ const table = db.collection<Chartdata>("chartdata");
 
 export async function findAll(req: Request, res: Response, next: NextFunction) {
   try {
-    const chartdata = await table.find().toArray();
+    const chartdata = await table.list();   //.toArray();
+    console.log(chartdata);
     res.json(chartdata);
   } catch (error) {
     next(error);
   }
 }
 
-export async function createOne(
+export async function insert(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const result = await table.insertOne(req.body);
-    if (!result.acknowledged) throw new Error("Error inserting Chartdata");
+    const key=req.params.key;
+    // TODO: check req.body isvalid
+    const result = await table.set(key, req.body);
+    if (!result) throw new Error("Error inserting Chartdata");
     res.status(201);
-    res.json({ _id: result.insertedId, ...req.body });
+    res.json(req.body);
   } catch (error) {
     next(error);
   }

@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.get("/", ChartdataHandlers.findAll);
 // router.get("/:id", )
+router.post("/:round", ChartdataHandlers.insert);
 
 export default router;

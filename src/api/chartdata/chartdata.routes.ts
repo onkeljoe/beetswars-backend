@@ -4,7 +4,7 @@ import * as ChartdataHandlers from "./chartdata.handler";
 const router = express.Router();
 
 router.get("/", ChartdataHandlers.findAll);
-// router.get("/:id", )
+router.get("/:round", ChartdataHandlers.findOne);
 router.post("/:round", ChartdataHandlers.insert);
 
 export default router;

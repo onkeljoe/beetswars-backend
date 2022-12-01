@@ -7,7 +7,8 @@ Backend and API for beetswars
 - Node.js
 - Express
 - Typescript
-- MongoDB
+- DynamoDB
+- Zod
 
 ## Startup
 

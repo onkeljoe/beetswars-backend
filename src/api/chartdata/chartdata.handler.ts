@@ -5,16 +5,20 @@ import { Chartdata } from "./chartdata.model";
 
 const table = db.collection<Chartdata>("chartdata");
 
+const readOne = (key: string) => {
+  const item = table.get(key);
+  const { created, updated, ...result } = item.props;
+  return result as Chartdata;
+};
+
 export async function findAll(req: Request, res: Response, next: NextFunction) {
   try {
     const chartdata = await table.list();
     if (!chartdata) throw new Error("Cannot load Chartdata from Database");
     // @ts-ignore
     const keys = chartdata.results.map((item) => item["key"]) as string[];
-    // console.log(keys);
-    const objects = await Promise.all(keys.map((key) => table.get(key)));
-    const result = objects.map((entry) => entry.props);
-    // console.log(result);
+    const result = await Promise.all(keys.map((key) => readOne(key)));
+    console.log(result);
     res.json(result);
   } catch (error) {
     return res.status(404).send(error);
@@ -24,9 +28,9 @@ export async function findAll(req: Request, res: Response, next: NextFunction) {
 export async function findOne(req: Request, res: Response, next: NextFunction) {
   try {
     const key = req.params.round;
-    const result = await table.get(key);
+    const result = await readOne(key);
     if (!result) throw new Error("No Object with given ID found");
-    res.json(result.props);
+    res.json(result);
   } catch (error) {
     return res.status(404).send(error);
   }
@@ -42,6 +46,6 @@ export async function insert(req: Request, res: Response, next: NextFunction) {
     res.status(201);
     res.json(req.body);
   } catch (error) {
-    next(error);
+    return res.status(400).send(error);
   }
 }

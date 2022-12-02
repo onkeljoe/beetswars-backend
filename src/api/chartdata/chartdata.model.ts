@@ -13,3 +13,10 @@ export const Chartdata = z.object({
 });
 
 export type Chartdata = z.infer<typeof Chartdata>;
+
+// export const ChartdataDb = Chartdata.extend({
+//   created: z.date(),
+//   updated: z.date(),
+// });
+
+// export type ChartdataDb = z.infer<typeof ChartdataDb>;

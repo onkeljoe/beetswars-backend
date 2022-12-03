@@ -13,6 +13,5 @@ export async function apikeys() {
   const keys = Object.keys(validkeylist).map(
     (key) => validkeylist[key]
   ) as string[];
-  //   console.log(validkeys);
   return keys;
 }

@@ -1,25 +1,30 @@
-interface IReward {
-  type: string;
-  token: string;
-  amount: number;
-  isfixed: boolean;
-}
+import * as z from "zod";
 
-interface IBribedata {
-  voteindex: number;
-  poolname: string;
-  poolurl: string;
-  rewarddescription: string;
-  assumption: string;
-  percentagethreshold?: number;
-  rewardcap?: number;
-  additionalrewards?: [string]; // TODO: Structure
-  reward: [string]; // TODO: Structure
-  payoutthreshold?: number;
-}
+export const Reward = z.object({
+  type: z.string(),
+  token: z.string(),
+  amount: z.number(),
+  isfixed: z.boolean(),
+});
 
-// const bribedataSchema = new Schema<IBribedata>({
-//   voteindex: { type: Number, required: true },
-// });
+export const Additionalrewards = z.object({
+  tier: z.string(),
+  factor: z.number(),
+});
 
-// const Bribedata = model<IBribedata>("Bribedata", bribedataSchema);
+export const Bribedata = z.object({
+  voteindex: z.number(),
+  poolname: z.string(),
+  poolurl: z.string(),
+  rewarddescription: z.string(),
+  assumption: z.string(),
+  percentagethreshold: z.number().optional(),
+  rewardcap: z.number().optional(),
+  additionalrewards: Additionalrewards.array().optional(),
+  reward: Reward.array(),
+  payoutthreshold: z.number().optional(),
+});
+
+export type Reward = z.infer<typeof Reward>;
+export type Additionalrewards = z.infer<typeof Additionalrewards>;
+export type Bribedata = z.infer<typeof Bribedata>;

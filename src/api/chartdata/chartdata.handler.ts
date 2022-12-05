@@ -20,7 +20,7 @@ export async function findAll(req: Request, res: Response, next: NextFunction) {
     // @ts-ignore
     const keys = chartdata.results.map((item) => item["key"]) as string[];
     const result = await Promise.all(keys.map((key) => readOne(key)));
-    res.json(result);
+    res.json({ chartdata: result });
   } catch (error) {
     logger.error(error);
     return res.status(404).send(error);
@@ -32,7 +32,7 @@ export async function findOne(req: Request, res: Response, next: NextFunction) {
     const key = req.params.round;
     const result = await readOne(key);
     if (!result) throw new Error("No Object with given ID found");
-    res.json(result);
+    res.json({ chartdata: result });
   } catch (error) {
     logger.error(error);
     return res.status(404).send(error);

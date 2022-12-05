@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { z, ZodError } from "zod";
 
 import { db } from "../../utils/database";
 import { Chartdata } from "./chartdata.model";
@@ -36,15 +37,16 @@ export async function findOne(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function insert(req: Request, res: Response, next: NextFunction) {
+  const key = req.params.round;
   try {
-    const key = req.params.round;
-    // TODO: check req.body isvalid
-    const payload = req.body;
+    const payload = Chartdata.parse(req.body);
     const result = await table.set(key, payload);
     if (!result) throw new Error("Error inserting Chartdata");
-    res.status(201);
-    res.json(req.body);
+    res.status(201).json(result);
   } catch (error) {
+    if (error instanceof ZodError) {
+      return res.status(422).send(error);
+    }
     return res.status(400).send(error);
   }
 }

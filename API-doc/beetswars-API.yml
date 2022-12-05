@@ -4,7 +4,7 @@ info:
   version: '1.0'
   description: Beetswars Backend API
 servers:
-  - url: https://api.server.test/v1
+  - url: https://beetswars-backend.cyclic.app/API/v1
 paths:
   /healthcheck:
     get:
@@ -30,6 +30,30 @@ paths:
     get:
       tags:
         - List of voting results
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chartdata:
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/Round'
+  /chart-data/{round}:
+    get:
+      tags:
+        - List of voting results for specified round
+      parameters:
+        - name: round
+          in: path
+          description: String with 2-figure round number
+          required: true
+          schema:
+            type: string
+            example: '07'
       responses:
         '200':
           description: OK

@@ -1,18 +1,12 @@
-import express, { Request, Response } from "express";
+import express from "express";
+import * as BribedataHandlers from "./bribedata.handler";
 
 const router = express.Router();
 
-type EmojiResponse = string[];
-
-router.get<{}, EmojiResponse>("/", (req, res) => {
-  res.json(["😀", "😳", "🙄"]);
-});
-
-router.get("/:round", (req: Request, res: Response) => {
-  res.json({
-    round: 99,
-    status: "pending",
-  });
-});
+router.get("/list", BribedataHandlers.getList);
+router.get("/:round", BribedataHandlers.findOne);
+router.post("/:round", BribedataHandlers.insertRound);
+router.post("/:round/:bribe", BribedataHandlers.insertBribe);
+router.post("/token/:key", BribedataHandlers.insertToken);
 
 export default router;

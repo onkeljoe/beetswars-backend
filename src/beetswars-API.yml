@@ -1,7 +1,7 @@
 openapi: '3.0.2'
 info:
   title: Beetswars Backend
-  version: '1.0'
+  version: '1.0.3'
   description: Beetswars Backend API
 servers:
   - url: https://beetswars-backend.cyclic.app/API/v1
@@ -13,20 +13,7 @@ paths:
       responses:
         '200':
           description: OK
-  /rounds:
-    get:
-      tags:
-        - List of voting rounds
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Round'
-  /chart-data:
+  /chartdata:
     get:
       tags:
         - List of voting results
@@ -42,7 +29,7 @@ paths:
                     type: array
                     items: 
                       $ref: '#/components/schemas/Round'
-  /chart-data/{round}:
+  /chartdata/{round}:
     get:
       tags:
         - List of voting results for specified round

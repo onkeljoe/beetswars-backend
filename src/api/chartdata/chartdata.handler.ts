@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { z, ZodError } from "zod";
 
 import { db } from "../../utils/database";
+import logger from "../../utils/logger";
 import { Chartdata } from "./chartdata.model";
 
 const table = db.collection<Chartdata>("chartdata");
@@ -21,6 +22,7 @@ export async function findAll(req: Request, res: Response, next: NextFunction) {
     const result = await Promise.all(keys.map((key) => readOne(key)));
     res.json(result);
   } catch (error) {
+    logger.error(error);
     return res.status(404).send(error);
   }
 }
@@ -32,6 +34,7 @@ export async function findOne(req: Request, res: Response, next: NextFunction) {
     if (!result) throw new Error("No Object with given ID found");
     res.json(result);
   } catch (error) {
+    logger.error(error);
     return res.status(404).send(error);
   }
 }
@@ -45,8 +48,10 @@ export async function insert(req: Request, res: Response, next: NextFunction) {
     res.status(201).json(result);
   } catch (error) {
     if (error instanceof ZodError) {
+      logger.error(error);
       return res.status(422).send(error);
     }
+    logger.error(error);
     return res.status(400).send(error);
   }
 }

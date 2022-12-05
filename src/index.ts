@@ -9,8 +9,12 @@ import cors from "cors";
 import api from "./api";
 
 const app = express();
-const myDb = db;
-logger.info(`DB: ${typeof myDb}`);
+try {
+  const myDb = db;
+  logger.info(`DB: ${typeof myDb}`);
+} catch (error) {
+  logger.error(error);
+}
 
 app.use(helmet()); // add security layer
 app.use(cors()); // allow cross-origin requests

@@ -28,7 +28,14 @@ paths:
                   chartdata:
                     type: array
                     items: 
-                      $ref: '#/components/schemas/Round'
+                      $ref: '#/components/schemas/Chartdata'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Cannot load Chartdata from Database"
   /chartdata/{round}:
     get:
       tags:
@@ -50,13 +57,59 @@ paths:
                 type: object
                 properties:
                   chartdata:
-                    type: array
-                    items: 
-                      $ref: '#/components/schemas/Round'
+                    $ref: '#/components/schemas/Chartdata'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema: 
+                type: string
+                example: 'No Object with given ID found'
+    post:
+      tags:
+        - Enter vote data for one round
+      parameters:
+        - name: round
+          in: path
+          description: String with 2-figure round number
+          required: true
+          schema:
+            type: string
+            example: '07'
+        - name: x-api-key
+          in: header
+          schema:
+            type: string
+            example: 'axf-08-sdrk'
+          required: true
+      requestBody:
+        description: Contents of the new database entry
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Chartdata'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: 
+                type: string
+                example: 'Error inserting Chartdata'
+        '422': 
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema: 
+                type: string
+                example: 'Type mismatch'
   /bribedata/{round}:
     get:
       tags:
-        - Bribedata for round
+        - Bribedata for round - NOT YET IMPLEMENTED
       parameters:
         - name: round
           in: path
@@ -76,7 +129,7 @@ paths:
           description: Invalid round ID
 components:
   schemas:
-    Round:
+    Chartdata:
       type: object
       properties:
         round:
@@ -90,6 +143,10 @@ components:
           type: integer
           format: int32
           example: 12345
+        bribedVotes:
+          type: integer
+          format: int32
+          example: 9345
         totalBribes:
           type: integer
           format: int32
@@ -102,13 +159,14 @@ components:
           type: integer
           format: int32
           example: 12
-    Chartdata:
-      type: object
-      properties:
-        chartdata:
-          type: array
-          items: 
-            $ref: '#/components/schemas/Round'
+        priceBeets: 
+          type: number
+          format: double
+          example: 0.7449121150496086
+        priceFbeets:
+          type: number
+          format: double
+          example: 0.74271
     Bribefile:
       type: object
       properties:

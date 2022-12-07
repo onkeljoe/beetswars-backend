@@ -42,8 +42,8 @@ export const Bribefile = z.object({
   voteStart: z.number(),
   voteEnd: z.number(),
   snapshotDateTime: z.number(),
-  tokendata: Tokendata.array(),
-  bribedata: Bribedata.array(),
+  tokendata: Tokendata.array().optional(),
+  bribedata: Bribedata.array().optional(),
 });
 
 export type Tokendata = z.infer<typeof Tokendata>;

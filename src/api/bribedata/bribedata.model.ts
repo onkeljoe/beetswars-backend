@@ -2,11 +2,11 @@ import * as z from "zod";
 
 export const Tokendata = z.object({
   token: z.string(),
-  tokenaddress: z.string(),
-  coingeckoid: z.string(),
-  bptpoolid: z.string(),
-  isbpt: z.boolean(),
-  lastprice: z.number(),
+  tokenaddress: z.string().optional(),
+  coingeckoid: z.string().optional(),
+  bptpoolid: z.string().optional(),
+  isbpt: z.boolean().optional(),
+  lastprice: z.number().optional(),
 });
 export type Tokendata = z.infer<typeof Tokendata>;
 
@@ -29,7 +29,7 @@ export const Bribedata = z.object({
   poolname: z.string(),
   poolurl: z.string(),
   rewarddescription: z.string(),
-  assumption: z.string(),
+  assumption: z.string().optional(),
   percentagethreshold: z.number().optional(),
   rewardcap: z.number().optional(),
   additionalrewards: Additionalrewards.array().optional(),
@@ -46,8 +46,8 @@ export const Bribefile = z.object({
   voteStart: z.number().optional(),
   voteEnd: z.number().optional(),
   snapshotDateTime: z.number().optional(),
-  tokendata: Tokendata.array().optional(),
-  bribedata: Bribedata.array().optional(),
+  tokendata: z.array(Tokendata).optional(),
+  bribedata: z.array(Bribedata).optional(),
 });
 
 export type Bribefile = z.infer<typeof Bribefile>;

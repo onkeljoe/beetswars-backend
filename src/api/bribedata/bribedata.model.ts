@@ -8,6 +8,7 @@ export const Tokendata = z.object({
   isbpt: z.boolean(),
   lastprice: z.number(),
 });
+export type Tokendata = z.infer<typeof Tokendata>;
 
 export const Reward = z.object({
   type: z.string(),
@@ -15,11 +16,13 @@ export const Reward = z.object({
   amount: z.number(),
   isfixed: z.boolean(),
 });
+export type Reward = z.infer<typeof Reward>;
 
 export const Additionalrewards = z.object({
   tier: z.string(),
   factor: z.number(),
 });
+export type Additionalrewards = z.infer<typeof Additionalrewards>;
 
 export const Bribedata = z.object({
   voteindex: z.number(),
@@ -33,21 +36,18 @@ export const Bribedata = z.object({
   reward: Reward.array(),
   payoutthreshold: z.number().optional(),
 });
+export type Bribedata = z.infer<typeof Bribedata>;
 
 export const Bribefile = z.object({
   version: z.string(),
   snapshot: z.string(),
   description: z.string(),
   round: z.number(),
-  voteStart: z.number(),
-  voteEnd: z.number(),
-  snapshotDateTime: z.number(),
+  voteStart: z.number().optional(),
+  voteEnd: z.number().optional(),
+  snapshotDateTime: z.number().optional(),
   tokendata: Tokendata.array().optional(),
   bribedata: Bribedata.array().optional(),
 });
 
-export type Tokendata = z.infer<typeof Tokendata>;
-export type Reward = z.infer<typeof Reward>;
-export type Additionalrewards = z.infer<typeof Additionalrewards>;
-export type Bribedata = z.infer<typeof Bribedata>;
 export type Bribefile = z.infer<typeof Bribefile>;

@@ -1,7 +1,7 @@
 openapi: '3.0.2'
 info:
   title: Beetswars Backend
-  version: '1.0.4'
+  version: '1.1.0'
   description: Beetswars Backend API
 servers:
   - url: https://beetswars-backend.cyclic.app/API/v1

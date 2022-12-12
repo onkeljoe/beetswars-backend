@@ -1,7 +1,7 @@
 openapi: '3.0.2'
 info:
   title: Beetswars Backend
-  version: '1.1.0'
+  version: '1.1.1'
   description: Beetswars Backend API
 servers:
   - url: https://beetswars-backend.cyclic.app/API/v1
@@ -277,7 +277,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Bribefile'
+                type: object
+                properties:
+                  chartdata:
+                    $ref: '#/components/schemas/Bribedata'
         '400':
           description: Bad Request
           content:
@@ -390,7 +393,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Bribefile'
+                type: object
+                properties:
+                  chartdata:
+                    $ref: '#/components/schemas/Bribefile'
         '400':
           description: Bad Request
           content:
@@ -464,7 +470,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Bribefile'
+                type: object
+                properties:
+                  chartdata:
+                    $ref: '#/components/schemas/Bribefile'
         '400':
           description: Bad Request
           content:
@@ -500,6 +509,78 @@ paths:
               schema:
                 type: string
                 example: 'Error inserting Tokendata'
+  /bribedata/latest:
+    get:
+      tags:
+        - Bribedata for current round
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bribefile'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "No Object with given key found"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Cannot load from Database"
+  /bribedata/latest/{round}:
+    post:
+      tags:
+        - set current round
+      parameters:
+        - name: round
+          in: path
+          description: String with 2-figure round number
+          required: true
+          schema:
+            type: string
+            example: '07'
+        - name: x-api-key
+          in: header
+          schema:
+            type: string
+            example: 'axf-08-sdrk'
+          required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'key set successfully'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: 
+                type: string
+                example: 'Cannot serve request'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'not allowed'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'No such round found'
 components:
   schemas:
     Chartdata:

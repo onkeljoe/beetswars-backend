@@ -15,6 +15,20 @@ const readOne = async (key: string) => {
   return result as Bribefile;
 };
 
+export async function getList(req: Request, res: Response) {
+  try {
+    const bribeRounds = await table.list();
+    if (!bribeRounds) return res.status(404).send("not found");
+    // @ts-ignore
+    const keylist = bribeRounds.results.map((x) => x.key) as string[];
+    const urllist = keylist.map((x) => ({ key: x, url: `${baseurl}${x}` }));
+    return res.send(urllist);
+  } catch (error) {
+    logger.error(error);
+    return res.status(400).send(error);
+  }
+}
+
 export async function findOne(req: Request, res: Response) {
   try {
     const key = req.params.round.toString();
@@ -24,6 +38,33 @@ export async function findOne(req: Request, res: Response) {
   } catch (error) {
     logger.error(error);
     return res.status(500).send(error);
+  }
+}
+
+export async function findLatest(req: Request, res: Response) {
+  try {
+    const key = await db.collection("latest").get("latestkey");
+    if (!key) return res.status(404).send("No key found");
+    const result = await readOne(key.props.key);
+    if (!result) return res.status(404).send("No Object with given key found");
+    return res.json(result);
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send(error);
+  }
+}
+
+export async function setLatest(req: Request, res: Response) {
+  try {
+    const key = req.params.round.toString();
+    const check = await readOne(key);
+    if (!check) return res.status(404).send("No such round found");
+    const coll = db.collection("latest");
+    await coll.set("latestkey", { key });
+    return res.status(201).send("key set successfully");
+  } catch (error) {
+    logger.error(error);
+    return res.status(400).send(error);
   }
 }
 
@@ -51,20 +92,6 @@ export async function insertBribe(req: Request, res: Response) {
       logger.error(error);
       return res.status(422).send(error);
     }
-    logger.error(error);
-    return res.status(400).send(error);
-  }
-}
-
-export async function getList(req: Request, res: Response) {
-  try {
-    const bribeRounds = await table.list();
-    if (!bribeRounds) return res.status(404).send("not found");
-    // @ts-ignore
-    const keylist = bribeRounds.results.map((x) => x.key) as string[];
-    const urllist = keylist.map((x) => ({ key: x, url: `${baseurl}${x}` }));
-    return res.send(urllist);
-  } catch (error) {
     logger.error(error);
     return res.status(400).send(error);
   }

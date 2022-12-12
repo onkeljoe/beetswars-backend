@@ -311,7 +311,7 @@ paths:
                 example: "Error inserting Bribedata"
     delete:
       tags:
-        - Delete full data for given round
+        - Delete full Bribefile for given round
       parameters:
         - name: round
           in: path

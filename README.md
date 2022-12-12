@@ -9,6 +9,7 @@ Backend and API for beetswars
 - Typescript
 - DynamoDB
 - Zod
+- OpenAPI (swagger)
 
 ## Startup
 
@@ -39,3 +40,11 @@ to get access to your instance of AWS DynamoDB, you need to add these keys to th
 the app is currently hosted on app.cyclic.sh and using their offered AWS DynamoDB database. The four AWS entries will be automatically added by the provider. PORT and HOST are optional, as the app will be redirected by the hoster.
 
 Important: Currently you need to set the DB_TABLE value in the "Variable" section of your app. The value is shown in "Data/Storage" section, where it is called "Table Name:".
+
+## Issues and Wishlist
+
+Please use Github Issues for adding errors or wishes:
+[https://github.com/onkeljoe/beetswars-backend/issues](https://github.com/onkeljoe/beetswars-backend/issues)
+
+Start heading with `[Bug]` to add errors or misbehaviour you find.
+Start heading with `[Feat]` to add a feature, you wish to see here.

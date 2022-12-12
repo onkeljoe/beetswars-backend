@@ -277,10 +277,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  chartdata:
-                    $ref: '#/components/schemas/Bribedata'
+                $ref: '#/components/schemas/Bribefile'
         '400':
           description: Bad Request
           content:
@@ -393,10 +390,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  chartdata:
-                    $ref: '#/components/schemas/Bribefile'
+                $ref: '#/components/schemas/Bribefile'
         '400':
           description: Bad Request
           content:
@@ -470,10 +464,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  chartdata:
-                    $ref: '#/components/schemas/Bribefile'
+                $ref: '#/components/schemas/Bribefile'
         '400':
           description: Bad Request
           content:

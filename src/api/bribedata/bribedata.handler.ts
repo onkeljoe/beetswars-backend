@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-
+import { ZodError } from "zod";
 import { db } from "../../utils/database";
 import logger from "../../utils/logger";
 import { Bribefile, Bribedata, Tokendata } from "./bribedata.model";
@@ -44,11 +44,15 @@ export async function insertBribe(req: Request, res: Response) {
     const newRound = { ...rest, bribedata: newBribedata };
     // write back data
     const result = await table.set(round, newRound);
-    if (!result) throw new Error("Error inserting Bribedata");
-    res.status(201).json(result);
+    if (!result) return res.status(500).send("Error inserting Bribedata");
+    res.status(201).json(result.props);
   } catch (error) {
+    if (error instanceof ZodError) {
+      logger.error(error);
+      return res.status(422).send(error);
+    }
     logger.error(error);
-    return res.status(500).send(error);
+    return res.status(400).send(error);
   }
 }
 
@@ -73,8 +77,12 @@ export async function insertRound(req: Request, res: Response) {
     if (+round !== payload.round) return res.status(400).send("key mismatch");
     const result = await table.set(round, payload);
     if (!result) res.status(500).send("Error inserting Bribedata");
-    return res.status(201).json(result);
+    return res.status(201).json(result.props);
   } catch (error) {
+    if (error instanceof ZodError) {
+      logger.error(error);
+      return res.status(422).send(error);
+    }
     logger.error(error);
     return res.status(400).send(error);
   }
@@ -98,16 +106,19 @@ export async function insertToken(req: Request, res: Response) {
     const newRound = { ...rest, tokendata: newTokendata };
     // write back data
     const result = await table.set(round, newRound);
-    if (!result) throw new Error("Error inserting Tokendata");
-    res.status(201).json(result);
+    if (!result) return res.status(500).send("Error inserting Tokendata");
+    res.status(201).json(result.props);
   } catch (error) {
+    if (error instanceof ZodError) {
+      logger.error(error);
+      return res.status(422).send(error);
+    }
     logger.error(error);
     return res.status(400).send(error);
   }
 }
 
 export async function deleteRound(req: Request, res: Response) {
-  // return res.send("not implemented yet");
   try {
     const round = req.params.round.toString();
     const result = await table.delete(round);

@@ -29,10 +29,17 @@ paths:
                     type: array
                     items: 
                       $ref: '#/components/schemas/Chartdata'
-        '404':
-          description: Not found
+        '400':
+          description: Bad Request
           content:
             application/json:
+              schema:
+                type: string
+                example: "Cannot serve request"
+        '500':
+          description: Internal server error
+          content:
+            text/plain:
               schema:
                 type: string
                 example: "Cannot load Chartdata from Database"
@@ -58,10 +65,17 @@ paths:
                 properties:
                   chartdata:
                     $ref: '#/components/schemas/Chartdata'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: 
+                type: string
+                example: 'cannot serve request'
         '404':
           description: Not found
           content:
-            application/json:
+            text/plain:
               schema: 
                 type: string
                 example: 'No Object with given ID found'
@@ -92,13 +106,20 @@ paths:
       responses:
         '201':
           description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chartdata:
+                    $ref: '#/components/schemas/Chartdata'
         '400':
           description: Bad Request
           content:
             application/json:
               schema: 
                 type: string
-                example: 'Error inserting Chartdata'
+                example: 'Cannot serve request'
         '403':
           description: Forbidden
           content:
@@ -109,14 +130,94 @@ paths:
         '422': 
           description: Unprocessable Entity
           content:
+            text/plain:
+              schema: 
+                type: string
+                example: 'Invalid input type'
+        '500':
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Error inserting Chartdata"
+    delete:
+      tags:
+        - Delete full data for given round
+      parameters:
+        - name: round
+          in: path
+          description: String with 2-figure round number
+          required: true
+          schema:
+            type: string
+            example: '07'
+        - name: x-api-key
+          in: header
+          schema:
+            type: string
+            example: 'axf-08-sdrk'
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'deleted round'
+        '400':
+          description: Bad Request
+          content:
             application/json:
               schema: 
                 type: string
-                example: 'Type mismatch'
+                example: 'Cannot serve request'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'not allowed'
+        '500':
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Could not delete"
+  /bribedata:
+    get:
+      tags:
+        - List of Bribe rounds
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bribelist'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: 
+                type: string
+                example: 'Cannot serve request'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'not found'
   /bribedata/{round}:
     get:
       tags:
-        - Bribedata for round - NOT YET IMPLEMENTED
+        - Bribedata for round
       parameters:
         - name: round
           in: path
@@ -133,7 +234,281 @@ paths:
               schema:
                 $ref: '#/components/schemas/Bribefile'
         '404':
-          description: Invalid round ID
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "No Object with given key found"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Cannot load from Database"
+    post:
+      tags:
+        - Enter incentives for one round
+      parameters:
+        - name: round
+          in: path
+          description: String with 2-figure round number
+          required: true
+          schema:
+            type: string
+            example: '07'
+        - name: x-api-key
+          in: header
+          schema:
+            type: string
+            example: 'axf-08-sdrk'
+          required: true
+      requestBody:
+        description: Contents of the new database entry
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bribefile'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chartdata:
+                    $ref: '#/components/schemas/Bribedata'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: 
+                type: string
+                example: 'Cannot serve request'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'not allowed'
+        '422': 
+          description: Unprocessable Entity
+          content:
+            text/plain:
+              schema: 
+                type: string
+                example: 'Invalid input type'
+        '500':
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Error inserting Bribedata"
+    delete:
+      tags:
+        - Delete full data for given round
+      parameters:
+        - name: round
+          in: path
+          description: String with 2-figure round number
+          required: true
+          schema:
+            type: string
+            example: '07'
+        - name: x-api-key
+          in: header
+          schema:
+            type: string
+            example: 'axf-08-sdrk'
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'deleted round'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: 
+                type: string
+                example: 'Cannot serve request'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'not allowed'
+        '500':
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Could not delete"
+  /bribedata/{round}/{voteindex}:
+    post:
+      tags:
+        - Enter or Update incentive for existing round
+      parameters:
+        - name: round
+          in: path
+          description: String with 2-figure round number
+          required: true
+          schema:
+            type: string
+            example: '07'
+        - name: voteindex
+          in: path
+          description: Voteindex Number
+          required: true
+          schema:
+            type: number
+            example: 34
+        - name: x-api-key
+          in: header
+          schema:
+            type: string
+            example: 'axf-08-sdrk'
+          required: true
+      requestBody:
+        description: Contents of the Incentive to add/update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bribedata'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chartdata:
+                    $ref: '#/components/schemas/Bribefile'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: 
+                type: string
+                example: 'Cannot serve request'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'not allowed'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'round does not exist'
+        '422': 
+          description: Unprocessable Entity
+          content:
+            text/plain:
+              schema: 
+                type: string
+                example: 'Invalid input type'
+        '500':
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Error inserting Bribedata'
+  /bribedata/token/{round}/{key}:
+    post:
+      tags:
+        - Enter or Update tokendata for existing round
+      parameters:
+        - name: round
+          in: path
+          description: String with 2-figure round number
+          required: true
+          schema:
+            type: string
+            example: '07'
+        - name: key
+          in: path
+          description: Token shortname
+          required: true
+          schema:
+            type: string
+            example: "BEETS"
+        - name: x-api-key
+          in: header
+          schema:
+            type: string
+            example: 'axf-08-sdrk'
+          required: true
+      requestBody:
+        description: Contents of Tokendata to add/update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tokendata'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chartdata:
+                    $ref: '#/components/schemas/Bribefile'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: 
+                type: string
+                example: 'Cannot serve request'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'not allowed'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'round does not exist'
+        '422': 
+          description: Unprocessable Entity
+          content:
+            text/plain:
+              schema: 
+                type: string
+                example: 'Invalid input type'
+        '500':
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Error inserting Tokendata'
 components:
   schemas:
     Chartdata:
@@ -303,3 +678,12 @@ components:
           type: number
           format: float
           example: 1.25
+    Bribelist:
+      type: object
+      properties:
+        key:
+          type: string
+          example: '25'
+        url:
+          type: string
+          example: 'https://server.com/API/v1/bribedata/25'

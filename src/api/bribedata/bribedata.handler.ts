@@ -70,6 +70,7 @@ export async function insertRound(req: Request, res: Response) {
   try {
     const round = req.params.round.toString();
     const payload = Bribefile.parse(req.body);
+    if (+round !== payload.round) return res.status(400).send("key mismatch");
     const result = await table.set(round, payload);
     if (!result) res.status(500).send("Error inserting Bribedata");
     return res.status(201).json(result);

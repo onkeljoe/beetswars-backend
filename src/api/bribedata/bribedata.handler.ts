@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import { db } from "../../utils/database";
 import logger from "../../utils/logger";
-import { Bribefile } from "./bribedata.model";
+import { Bribefile, Bribedata, Tokendata } from "./bribedata.model";
 
 const baseurl = "https://beetswars-backend.cyclic.app/API/v1/bribedata/";
 
@@ -10,6 +10,7 @@ const table = db.collection<Bribefile>("bribedata");
 
 const readOne = async (key: string) => {
   const item = await table.get(key);
+  if (!item) return null;
   const { created, updated, ...result } = item.props;
   return result as Bribefile;
 };
@@ -18,28 +19,36 @@ export async function findOne(req: Request, res: Response) {
   try {
     const key = req.params.round.toString();
     const result = await readOne(key);
-    if (!result) throw new Error("No Object with given key found");
+    if (!result) return res.status(404).send("No Object with given key found");
     return res.json(result);
   } catch (error) {
     logger.error(error);
-    return res.status(404).send(error);
+    return res.status(500).send(error);
   }
 }
 
 export async function insertBribe(req: Request, res: Response) {
-  return res.send("not implemented yet");
   try {
+    // get round data
     const round = req.params.round.toString();
-    const key = req.params.voteindex.toString();
-    // TODO: check if body is valild
-    const payload = req.body;
-
-    const result = await table.set(key, payload);
+    const previous = await readOne(round);
+    if (!previous) return res.status(404).send("round does not exist");
+    // parse payload from body
+    const key = +req.params.voteindex;
+    const payload = Bribedata.parse(req.body);
+    if (payload.voteindex !== key) return res.status(400).send("key mismatch");
+    // set new bribedata array
+    const { bribedata, ...rest } = previous;
+    const newBribedata = bribedata.filter((x) => x.voteindex !== +key);
+    newBribedata.push(payload);
+    const newRound = { ...rest, bribedata: newBribedata };
+    // write back data
+    const result = await table.set(round, newRound);
     if (!result) throw new Error("Error inserting Bribedata");
-    res.status(201);
-    res.json(result);
+    res.status(201).json(result);
   } catch (error) {
-    return res.status(400).send(error);
+    logger.error(error);
+    return res.status(500).send(error);
   }
 }
 
@@ -47,7 +56,6 @@ export async function getList(req: Request, res: Response) {
   try {
     const bribeRounds = await table.list();
     if (!bribeRounds) return res.status(404).send("not found");
-    console.log(bribeRounds);
     // @ts-ignore
     const keylist = bribeRounds.results.map((x) => x.key) as string[];
     const urllist = keylist.map((x) => ({ key: x, url: `${baseurl}${x}` }));
@@ -63,7 +71,7 @@ export async function insertRound(req: Request, res: Response) {
     const round = req.params.round.toString();
     const payload = Bribefile.parse(req.body);
     const result = await table.set(round, payload);
-    if (!result) throw new Error("Error inserting Bribedata");
+    if (!result) res.status(500).send("Error inserting Bribedata");
     return res.status(201).json(result);
   } catch (error) {
     logger.error(error);
@@ -72,11 +80,39 @@ export async function insertRound(req: Request, res: Response) {
 }
 
 export async function insertToken(req: Request, res: Response) {
-  return res.send("not implemented yet");
+  // return res.send("not implemented yet");
+  try {
+    // get round data
+    const round = req.params.round.toString();
+    const previous = await readOne(round);
+    if (!previous) return res.status(404).send("round does not exist");
+    // parse payload from body
+    const token = req.params.key.toString();
+    const payload = Tokendata.parse(req.body);
+    if (payload.token !== token) return res.status(400).send("key mismatch");
+    // set new bribedata array
+    const { tokendata, ...rest } = previous;
+    const newTokendata = tokendata.filter((x) => x.token !== token);
+    newTokendata.push(payload);
+    const newRound = { ...rest, tokendata: newTokendata };
+    // write back data
+    const result = await table.set(round, newRound);
+    if (!result) throw new Error("Error inserting Tokendata");
+    res.status(201).json(result);
+  } catch (error) {
+    logger.error(error);
+    return res.status(400).send(error);
+  }
+}
+
+export async function deleteRound(req: Request, res: Response) {
+  // return res.send("not implemented yet");
   try {
     const round = req.params.round.toString();
-    const token = req.params.key.toString();
-    // insert
+    const result = await table.delete(round);
+    if (!result) return res.status(500).send("could not delete");
+    logger.info(`deleted round ${round} bribefile`);
+    return res.send(`deleted round ${round}`);
   } catch (error) {
     logger.error(error);
     return res.status(400).send(error);

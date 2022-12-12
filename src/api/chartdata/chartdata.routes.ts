@@ -6,5 +6,6 @@ const router = express.Router();
 router.get("/", ChartdataHandlers.findAll);
 router.get("/:round", ChartdataHandlers.findOne);
 router.post("/:round", ChartdataHandlers.insert);
+router.delete("/:round", ChartdataHandlers.deleteRound);
 
 export default router;

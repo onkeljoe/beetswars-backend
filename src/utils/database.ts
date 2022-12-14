@@ -15,3 +15,11 @@ export async function apikeys() {
   ) as string[];
   return keys;
 }
+
+export async function readOne<T>(table: string, key: string) {
+  const coll = db.collection<T>(table);
+  const item = await coll.get(key);
+  if (!item) return null;
+  const { created, updated, ...result } = item.props;
+  return result as T;
+}

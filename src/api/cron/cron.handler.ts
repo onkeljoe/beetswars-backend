@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 // import { z, ZodError } from "zod";
 
 import { db, readOne } from "../../utils/database";

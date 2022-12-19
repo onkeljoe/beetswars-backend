@@ -3,9 +3,16 @@ import { request, gql } from "graphql-request";
 
 const queryUrl = "https://hub.snapshot.org/graphql";
 
-export async function getSnapshotVotes(proposal: string): Promise<any[]> {
-  // Initialize empty array, first and skip, loop
-  let allResults: any[] = [];
+export interface snapVote {
+  choice: {
+    [key: string]: number;
+  };
+  vp: number;
+}
+
+export async function getSnapshotVotes(proposal: string): Promise<snapVote[]> {
+  // Initialize empty array, "first" and "skip", loop
+  let allResults: snapVote[] = [];
   const first = 1000;
   let skip = 0;
   let hasMore = true;

@@ -2,7 +2,7 @@ import { readOne } from "../../utils/database";
 import { Bribefile } from "../bribedata/bribedata.model";
 import { Chartdata } from "../chartdata/chartdata.model";
 import { getSnapshotProposal, getSnapshotVotes } from "../../utils/snapshot";
-import { getBeetsPrice } from "../../utils/coingecko";
+import { getCoingeckoPrice } from "../../utils/coingecko";
 import { getTokenPrice } from "../../utils/beetsBack";
 
 export async function getData(round: string) {
@@ -28,7 +28,6 @@ export async function getData(round: string) {
       poolVotes[key] = (poolVotes[key] || 0) + (vp * value) / total;
     }
   });
-  // console.log("poolvotes:", poolVotes);
   const totalVotes = Math.round(
     Object.values(poolVotes).reduce((a, b) => a + b)
   );
@@ -37,7 +36,7 @@ export async function getData(round: string) {
   );
 
   // calculate prices
-  const priceBeets = await getBeetsPrice(end);
+  const priceBeets = await getCoingeckoPrice("beethoven-x", end);
   const priceFbeets = await getTokenPrice(
     end,
     "0xfcef8a994209d6916eb2c86cdd2afd60aa6f54b1"
@@ -90,7 +89,6 @@ export async function getData(round: string) {
     bribeEntry.usd = Math.min(sum, rewardcap);
     bribes[index] = bribeEntry;
   }
-  // console.log("after: ", bribes);
   const totalBribes = Math.round(bribes.reduce((sum, x) => sum + x.usd, 0));
 
   // fill data

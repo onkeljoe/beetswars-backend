@@ -91,15 +91,15 @@ export async function readList(
 
 export async function insert<T>(
   collection: string,
-  key: string,
+  dbkey: string,
   payload: T
 ): Promise<T | null> {
   try {
     // @ts-ignore
-    const coll = db.collection<T>(collection);
-    const result = await coll.set(key, payload);
+    const coll = db.collection(collection);
+    const result = await coll.set(dbkey, payload);
     if (!result) return null;
-    return result as T;
+    return result.props as T;
   } catch (error) {
     logger.error(error);
     return null;
@@ -109,16 +109,16 @@ export async function insert<T>(
 export async function remove<T>(
   collection: string,
   key: string
-): Promise<T | null> {
+): Promise<boolean> {
   try {
     // @ts-ignore
     const coll = db.collection<T>(collection);
-    const result = await coll.delete(key);
-    if (!result) return null;
+    const result = (await coll.delete(key)) as boolean;
+    if (!result) return false;
     // @ts-ignore
-    return result as T;
+    return result;
   } catch (error) {
     logger.error(error);
-    return null;
+    return false;
   }
 }

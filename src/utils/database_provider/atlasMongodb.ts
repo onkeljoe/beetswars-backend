@@ -12,7 +12,7 @@ export async function connect(
 }
 
 export async function readOne<T>(
-  table: string,
+  collection: string,
   key: string
 ): Promise<T | null> {
   //   const coll = db.collection<T>(table);
@@ -23,21 +23,28 @@ export async function readOne<T>(
   return null;
 }
 
-export async function readAll<T>(table: string): Promise<T[] | null> {
+export async function readAll<T>(collection: string): Promise<T[] | null> {
   return null;
 }
 
 export async function readList(
-  table: string,
+  collection: string,
   field: string
 ): Promise<string[]> {
   return [];
 }
 
-export async function insert<T>(key: string, value: T): Promise<T | null> {
+export async function insert<T>(
+  collection: string,
+  dbkey: string,
+  payload: T
+): Promise<T | null> {
   return null;
 }
 
-export async function remove<T>(key: string): Promise<T | null> {
-  return null;
+export async function remove<T>(
+  collection: string,
+  key: string
+): Promise<boolean> {
+  return false;
 }

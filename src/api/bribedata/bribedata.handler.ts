@@ -1,10 +1,14 @@
 import { Request, Response } from "express";
 import { ZodError } from "zod";
-import { db } from "../../utils/database";
 import logger from "../../utils/logger";
 import { Bribefile, Bribedata, Tokendata } from "./bribedata.model";
 
 const baseurl = "https://beetswars-backend.cyclic.app/API/v1/bribedata/";
+
+// @ts-ignore
+import cyclicdb from "cyclic-dynamodb";
+import { config } from "../../utils/config";
+export const db = cyclicdb(config.dbTable);
 
 const table = db.collection<Bribefile>("bribedata");
 

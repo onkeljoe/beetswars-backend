@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-
 import { readOne } from "../../utils/database";
 import logger from "../../utils/logger";
 import { Chartdata } from "../chartdata/chartdata.model";

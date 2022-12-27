@@ -20,8 +20,8 @@ export async function insertVoteEnd(req: Request, res: Response) {
     return res.status(400).json(myvalue);
   }
   logger.info("Vote End recorded");
-  const checkChartdataEntry = await readOne<Chartdata>("chartdata", round.key);
-  if (checkChartdataEntry) return res.status(409).send("duplicate entry");
+  // const checkChartdataEntry = await readOne<Chartdata>("chartdata", round.key);
+  // if (checkChartdataEntry) return res.status(409).send("duplicate entry");
   const result = await chartTable.set(round.key, newRound);
   if (!result) res.status(500).send("Error inserting Chartdata");
   return res.status(201).json(result.props);

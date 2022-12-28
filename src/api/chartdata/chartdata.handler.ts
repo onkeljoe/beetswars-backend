@@ -1,27 +1,14 @@
-import { Request, Response, NextFunction } from "express";
-import { z, ZodError } from "zod";
-
-import { db } from "../../utils/database";
+import { Request, Response } from "express";
+import { ZodError } from "zod";
 import logger from "../../utils/logger";
 import { Chartdata } from "./chartdata.model";
+import { readAll, readOne, insert, remove } from "../../utils/database";
 
-const table = db.collection<Chartdata>("chartdata");
-
-const readOne = async (key: string) => {
-  const item = await table.get(key);
-  if (!item) return null;
-  const { created, updated, ...result } = item.props;
-  return result as Chartdata;
-};
-
-export async function findAll(req: Request, res: Response, next: NextFunction) {
+export async function findAll(req: Request, res: Response) {
   try {
-    const chartdata = await table.list();
-    if (!chartdata)
+    const result = await readAll<Chartdata>("chartdata");
+    if (!result)
       return res.status(500).send("Cannot load Chartdata from Database");
-    // @ts-ignore
-    const keys = chartdata.results.map((item) => item["key"]) as string[];
-    const result = await Promise.all(keys.map((key) => readOne(key)));
     return res.json({ chartdata: result });
   } catch (error) {
     logger.error(error);
@@ -29,10 +16,10 @@ export async function findAll(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function findOne(req: Request, res: Response, next: NextFunction) {
+export async function findOne(req: Request, res: Response) {
   try {
     const key = req.params.round;
-    const result = await readOne(key);
+    const result = await readOne<Chartdata>("chartdata", key);
     if (!result) return res.status(404).send("No Object with given ID found");
     return res.json({ chartdata: result });
   } catch (error) {
@@ -41,11 +28,11 @@ export async function findOne(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function insert(req: Request, res: Response, next: NextFunction) {
+export async function insertOne(req: Request, res: Response) {
   const key = req.params.round;
   try {
-    const payload = Chartdata.parse(req.body);
-    const result = await table.set(key, payload);
+    const data = Chartdata.parse(req.body);
+    const result = await insert<Chartdata>("chartdata", key, data);
     if (!result) res.status(500).send("Error inserting Chartdata");
     return res.status(201).json(result);
   } catch (error) {
@@ -61,7 +48,7 @@ export async function insert(req: Request, res: Response, next: NextFunction) {
 export async function deleteRound(req: Request, res: Response) {
   try {
     const round = req.params.round.toString();
-    const result = await table.delete(round);
+    const result = await remove<Chartdata>("chartdata", round);
     if (!result) return res.status(500).send("could not delete");
     logger.info(`deleted round ${round} chartdata`);
     return res.send(`deleted round ${round}`);

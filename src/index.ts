@@ -3,7 +3,7 @@ import swaggerUi from "swagger-ui-express";
 import yaml from "yamljs";
 import logger from "./utils/logger";
 import { config } from "./utils/config";
-import { db } from "./utils/database";
+import { connect } from "./utils/database";
 import { checkApikey } from "./utils/apikey";
 
 import helmet from "helmet";
@@ -20,13 +20,6 @@ try {
   logger.info("src");
 }
 
-try {
-  const myDb = db;
-  logger.info(`DB: ${typeof myDb}`);
-} catch (error) {
-  logger.error(error);
-}
-
 app.use(helmet()); // add security layer
 app.use(cors()); // allow cross-origin requests
 app.use(express.json()); // allow JSON in POST
@@ -39,6 +32,16 @@ app.get("/", (req: Request, res: Response<string>) => {
 app.use("/api", checkApikey);
 app.use("/api/v1", api);
 
-app.listen(config.port, config.host, () => {
-  logger.info(`App listening at http://${config.host}:${config.port}`);
-});
+(async () => {
+  try {
+    const db = await connect();
+    // only run http server, if db connected successfully
+    if (!db) process.exit(-1);
+    app.listen(config.port, config.host, () => {
+      logger.info(`App listening at http://${config.host}:${config.port}`);
+    });
+  } catch (error) {
+    logger.error(error);
+    process.exit(-1);
+  }
+})();

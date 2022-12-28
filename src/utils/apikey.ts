@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import logger from "./logger";
-import { apikeys } from "./database";
+import { readOne } from "./database";
 
 export async function checkApikey(
   req: Request,
@@ -8,10 +8,17 @@ export async function checkApikey(
   next: NextFunction
 ) {
   if (req.method === "GET") {
+    // no key needed to GET
     next();
   } else {
     const apikey = req.header("x-api-key");
-    const validkeys = await apikeys();
+    const validkeylist = await readOne<{ [key: string]: string }>(
+      "apikeys",
+      "keys"
+    );
+    const validkeys = !validkeylist
+      ? ([] as string[])
+      : Object.keys(validkeylist).map((key) => validkeylist[key]);
     if (apikey && validkeys.indexOf(apikey) > -1) {
       logger.info("Valid API-key found");
       next();

@@ -8,6 +8,7 @@
     "graphql": "^16.6.0",
     "graphql-request": "^5.0.0",
     "helmet": "^6.0.0",
+    "mongodb": "^4.13.0",
     "pino": "^8.7.0",
     "pino-pretty": "^9.1.1",
     "swagger-ui-express": "^4.6.0",

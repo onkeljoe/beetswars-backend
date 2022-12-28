@@ -1,7 +1,7 @@
 import { config } from "../config";
 import logger from "../logger";
 import { Provider } from "./provider.interface";
-const { MongoClient } = require("mongodb");
+// const { MongoClient } = require("mongodb");
 // const db = new MongoClient("config.");
 
 const mongoProvider: Provider = {

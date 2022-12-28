@@ -16,4 +16,5 @@ switch (config.dbProvider) {
     provider = dynamoProvider;
 }
 
-export const { connect, readOne, readAll, readList, insert, remove } = provider;
+export const { connect, readOne, readAll, readKeyList, insert, remove } =
+  provider;

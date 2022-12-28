@@ -35,27 +35,36 @@ const dynamoProvider: Provider = {
   async readAll<T>(collection: string): Promise<T[] | null> {
     try {
       // @ts-ignore
-      const coll = db.collection<T>(collection);
+      const coll = db.collection(collection);
       const data = await coll.list();
       if (!data) return null;
       // @ts-ignore
       const keys = data.results.map((item) => item["key"]) as string[];
-      const result = await Promise.all(
-        keys.map((key) => this.readOne(collection, key))
-      );
-      return result as T[];
+      const raw = await Promise.all(keys.map((key) => coll.get(key)));
+      const result = raw.map((x) => {
+        const { created, updated, ...take } = x.props;
+        return take as T;
+      });
+      return result;
     } catch (error) {
       logger.error(error);
       return null;
     }
   },
 
-  async readList(collection: string, field: string): Promise<string[]> {
-    const full = await this.readAll(collection);
-    if (!full) return [];
-    // @ts-ignore
-    const result = full.map((x) => x[field].toString()) as string[];
-    return result;
+  async readKeyList(collection: string): Promise<string[]> {
+    try {
+      // @ts-ignore
+      const coll = db.collection(collection);
+      const data = await coll.list();
+      if (!data) return [];
+      // @ts-ignore
+      const keys = data.results.map((item) => item["key"]) as string[];
+      return keys;
+    } catch (error) {
+      logger.error(error);
+      return [];
+    }
   },
 
   async insert<T>(

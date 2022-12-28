@@ -2,13 +2,13 @@ import { Request, Response } from "express";
 import { ZodError } from "zod";
 import logger from "../../utils/logger";
 import { Bribefile, Bribedata, Tokendata } from "./bribedata.model";
-import { insert, readList, readOne, remove } from "../../utils/database";
+import { insert, readKeyList, readOne, remove } from "../../utils/database";
 
 const baseurl = "https://beetswars-backend.cyclic.app/API/v1/bribedata/";
 
 export async function getList(req: Request, res: Response) {
   try {
-    const keylist = await readList("bribedata", "round");
+    const keylist = await readKeyList("bribedata");
     const urllist = keylist.map((x) => ({ key: x, url: `${baseurl}${x}` }));
     return res.send(urllist);
   } catch (error) {

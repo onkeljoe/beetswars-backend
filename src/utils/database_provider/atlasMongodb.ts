@@ -24,7 +24,7 @@ const mongoProvider: Provider = {
     return null;
   },
 
-  async readList(collection: string, field: string): Promise<string[]> {
+  async readKeyList(collection: string): Promise<string[]> {
     return [];
   },
 

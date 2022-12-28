@@ -32,16 +32,18 @@ app.get("/", (req: Request, res: Response<string>) => {
 app.use("/api", checkApikey);
 app.use("/api/v1", api);
 
-(async () => {
-  try {
-    const db = await connect();
-    // only run http server, if db connected successfully
-    if (!db) process.exit(-1);
-    app.listen(config.port, config.host, () => {
-      logger.info(`App listening at http://${config.host}:${config.port}`);
-    });
-  } catch (error) {
-    logger.error(error);
-    process.exit(-1);
-  }
-})();
+// (async () => {
+//   try {
+// const db = await connect();
+// only run http server, if db connected successfully
+//     if (!db) process.exit(-1);
+
+//   } catch (error) {
+//     logger.error(error);
+//     process.exit(-1);
+//   }
+// })();
+connect();
+app.listen(config.port, config.host, () => {
+  logger.info(`App listening at http://${config.host}:${config.port}`);
+});

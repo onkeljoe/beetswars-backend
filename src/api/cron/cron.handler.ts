@@ -8,7 +8,6 @@ export async function insertVoteEnd(req: Request, res: Response) {
   const round = await readOne<{ key: string }>("latest", "latestkey");
   if (!round) return;
   const key = round.key;
-  console.log("round: ", key);
   const newRound = await getData(key);
   if (Math.floor(Date.now() / 1000) < newRound.voteEnd) {
     const myvalue = {
@@ -17,23 +16,11 @@ export async function insertVoteEnd(req: Request, res: Response) {
     };
     return res.status(400).json(myvalue);
   }
-  logger.info("Vote End recorded");
+  logger.info(`Vote End recorded round ${key}`);
   // const checkChartdataEntry = await readOne<Chartdata>("chartdata", round.key);
   // if (checkChartdataEntry) return res.status(409).send("duplicate entry");
   const result = await insert<Chartdata>("chartdata", key, newRound);
-  if (!result) res.status(500).send("Error inserting Chartdata");
-  // const result = { props: newRound };
+  if (!result) return res.status(500).send("Error inserting Chartdata");
+  // const result = newRound;
   return res.status(201).json(result);
 }
-
-// "chartdata": {
-//         "bribedVotes": 41659692,
-//         "round": "26",
-//         "voteEnd": 1671987600,
-//         "totalBribes": 10714,
-//         "totalBriber": 4,
-//         "priceFbeets": 0.04402805659279031,
-//         "priceBeets": 0.03564498394569577,
-//         "totalVoter": 539,
-//         "totalVotes": 59005417
-//     }

@@ -12,12 +12,12 @@ export async function checkApikey(
     next();
   } else {
     const apikey = req.header("x-api-key");
-    const validkeylist: { [key: string]: string } | null = await readOne(
+    const validkeylist = await readOne<{ [key: string]: string }>(
       "apikeys",
       "keys"
     );
-    const validkeys: string[] = !validkeylist
-      ? []
+    const validkeys = !validkeylist
+      ? ([] as string[])
       : Object.keys(validkeylist).map((key) => validkeylist[key]);
     if (apikey && validkeys.indexOf(apikey) > -1) {
       logger.info("Valid API-key found");

@@ -53,31 +53,6 @@ export async function readAll<T>(collection: string): Promise<T[] | null> {
   }
 }
 
-// export async function readList2(
-//   collection: string,
-//   field: string
-// ): Promise<string[]> {
-//   try {
-//     // @ts-ignore
-//     const coll = db.collection<T>(collection);
-//     const data = await coll.list();
-//     if (!data) return [] as string[];
-//     // @ts-ignore
-//     const keys = data.results.map((item) => item["key"]) as string[];
-//     const result = await Promise.all(
-//       keys.map((key) => {
-//         const item = readOne(collection, key);
-//         // @ts-ignore
-//         return item[field].toString();
-//       })
-//     );
-//     return result;
-//   } catch (error) {
-//     logger.error(error);
-//     return [] as string[];
-//   }
-// }
-
 export async function readList(
   collection: string,
   field: string

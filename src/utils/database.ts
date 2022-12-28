@@ -1,8 +1,9 @@
 import { config } from "./config";
-import * as mongoProvider from "./database_provider/atlasMongodb";
-import * as dynamoProvider from "./database_provider/cyclicDynamodb";
+import mongoProvider from "./database_provider/atlasMongodb";
+import dynamoProvider from "./database_provider/cyclicDynamodb";
+import { Provider } from "./database_provider/provider.interface";
 
-let provider;
+let provider: Provider;
 
 switch (config.dbProvider) {
   case "DynamoDB":

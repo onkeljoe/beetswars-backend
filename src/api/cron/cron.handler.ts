@@ -12,6 +12,13 @@ export async function insertVoteEnd(req: Request, res: Response) {
   const round = await readOne<roundtype>("latest", "latestkey");
   if (!round) return;
   const newRound = await getData(round.key);
+  if (Math.floor(Date.now() / 1000) < newRound.voteEnd) {
+    const myvalue = {
+      error: "too early, did not write to database",
+      value: newRound,
+    };
+    return res.status(400).json(myvalue);
+  }
   logger.info("Vote End recorded");
   const checkChartdataEntry = await readOne<Chartdata>("chartdata", round.key);
   if (checkChartdataEntry) return res.status(409).send("duplicate entry");

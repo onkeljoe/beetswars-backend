@@ -2,6 +2,8 @@
 
 Backend and API for beetswars
 
+This project is retired, because the backend API is now included within the beetswars V2 next-js project
+
 ## Tech-stack
 
 - Node.js
